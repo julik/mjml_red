@@ -35,6 +35,8 @@ require_relative "mjml_red/components/body/mj_body"
 require_relative "mjml_red/components/body/mj_section"
 require_relative "mjml_red/components/body/mj_column"
 require_relative "mjml_red/components/body/mj_text"
+require_relative "mjml_red/components/body/mj_wrapper"
+require_relative "mjml_red/components/body/mj_group"
 
 module MjmlRed
   def self.to_html(mjml_string, options = {})

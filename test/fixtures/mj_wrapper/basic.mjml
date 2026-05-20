@@ -1,0 +1,11 @@
+<mjml>
+  <mj-body>
+    <mj-wrapper background-color="#f0f0f0">
+      <mj-section>
+        <mj-column>
+          <mj-text>Inside wrapper</mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>
