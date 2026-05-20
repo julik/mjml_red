@@ -22,7 +22,7 @@ Add to your Gemfile:
 gem "emjay"
 ```
 
-Runtime dependencies: `nokogiri`, `premailer`.
+Runtime dependencies: `nokogiri` for XML/HTML parsing, `premailer` for CSS inlining (`<mj-style inline="inline">`).
 
 ## Usage
 
