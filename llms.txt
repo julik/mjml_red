@@ -1,0 +1,109 @@
+# emjay
+
+> Pure-Ruby MJML renderer. Converts MJML email markup to responsive HTML.
+
+emjay is a Ruby implementation of MJML (https://mjml.io). It takes an MJML string and returns a complete HTML email with responsive tables, Outlook conditionals, and inlined CSS. No Node.js or native extensions required.
+
+## API
+
+The core API is a single method:
+
+    Emjay.to_html(mjml_string) -> html_string
+
+## Rails integration
+
+emjay registers an ActionView template handler via a Railtie. No configuration needed — just add `gem "emjay"` to the Gemfile.
+
+### Template naming
+
+Templates use the `.html.mjml` extension:
+
+    app/views/user_mailer/welcome.html.mjml
+
+Rails resolves this as: `.mjml` selects the emjay handler, `.html` sets the output MIME type.
+
+### ERB is always available
+
+The handler chains through ERB before compiling MJML. All ERB tags (`<%= %>`, `<% %>`, `<%# %>`) work inside `.mjml` templates. There is no separate `.mjml.erb` extension — ERB support is built in.
+
+Use ERB exactly as you would in any other Rails template:
+
+- Instance variables from the mailer action: `<%= @user.name %>`
+- Helpers: `<%= number_to_currency(@amount) %>`
+- Partials: `<%= render "shared/header" %>`
+- Conditionals: `<% if @user.premium? %> ... <% end %>`
+
+### Follow host app conventions
+
+When writing MJML templates in a Rails app, follow the conventions of the host application:
+
+- Use the same helper methods, partial patterns, and i18n approach as other views
+- Use mailer previews (`ActionMailer::Preview`) to iterate on email design
+- Provide a plain text alternative (`welcome.text.erb`) alongside the MJML template for multipart emails
+- Keep mailer actions simple — set instance variables and call `mail()`
+
+## MJML components
+
+MJML templates are XML documents wrapped in `<mjml>` tags. The full component reference is at https://documentation.mjml.io/
+
+### Structure
+
+Every MJML email follows this structure:
+
+    <mjml>
+      <mj-head>
+        <!-- head components: styles, fonts, attributes, title, preview -->
+      </mj-head>
+      <mj-body>
+        <mj-section>
+          <mj-column>
+            <!-- content components: text, image, button, etc. -->
+          </mj-column>
+        </mj-section>
+      </mj-body>
+    </mjml>
+
+Content must be nested inside `mj-section > mj-column`. Sections are full-width rows, columns divide them horizontally.
+
+### Head components
+
+- `mj-attributes` — set default attributes for components globally or by class
+- `mj-style` — add CSS to the `<head>` (use `inline="inline"` to inline into elements)
+- `mj-font` — register web fonts
+- `mj-title` — set the `<title>` tag
+- `mj-preview` — set preview text shown in inbox listings
+- `mj-breakpoint` — set the responsive breakpoint (default 480px)
+- `mj-html-attributes` — add HTML attributes to rendered elements via CSS selectors
+
+### Body components
+
+- `mj-section` — full-width row container
+- `mj-column` — vertical subdivision of a section
+- `mj-group` — non-responsive column grouping
+- `mj-wrapper` — wraps multiple sections with shared background
+- `mj-text` — text content (supports inline HTML)
+- `mj-image` — responsive image
+- `mj-button` — call-to-action button
+- `mj-divider` — horizontal rule
+- `mj-spacer` — vertical spacing
+- `mj-table` — HTML table passthrough
+- `mj-raw` — raw HTML passthrough
+- `mj-hero` — hero section with background image
+- `mj-social` / `mj-social-element` — social media icon links
+- `mj-navbar` / `mj-navbar-link` — horizontal navigation
+- `mj-accordion` / `mj-accordion-element` — expandable content
+- `mj-carousel` / `mj-carousel-image` — image carousel
+
+### Common attributes
+
+Most body components accept: `padding`, `background-color`, `css-class`, `mj-class`, `width`, `font-family`, `font-size`, `color`, `align`.
+
+Refer to the MJML documentation for the full attribute list per component: https://documentation.mjml.io/
+
+## Tips for generating MJML
+
+- Always wrap content in the `mj-section > mj-column` structure
+- Use `mj-attributes` to set shared styles instead of repeating attributes
+- Use `mj-style` with `inline="inline"` for CSS properties not available as component attributes
+- Use `mj-raw` sparingly — only for HTML that MJML components cannot express
+- Test with real email clients or use mailer previews — email rendering varies wildly across clients

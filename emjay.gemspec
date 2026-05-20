@@ -18,7 +18,7 @@ Gem::Specification.new do |spec|
   spec.metadata["source_code_uri"] = spec.homepage
   spec.metadata["changelog_uri"] = "#{spec.homepage}/commits/main"
 
-  spec.files = Dir["lib/**/*.rb", "LICENSE", "README.md"]
+  spec.files = Dir["lib/**/*.rb", "LICENSE", "README.md", "llms.txt"]
   spec.require_paths = ["lib"]
 
   spec.add_dependency "nokogiri", ">= 1.12"
