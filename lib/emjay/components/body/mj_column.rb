@@ -195,7 +195,7 @@ module Emjay
 
       # Formats a float to match JS toString() — strips trailing .0
       def format_float(value)
-        value == value.to_i ? value.to_i : value
+        (value == value.to_i) ? value.to_i : value
       end
 
       def has_border_radius?

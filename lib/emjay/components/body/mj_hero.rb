@@ -184,36 +184,36 @@ module Emjay
         tr_attrs = html_attributes(style: :tr)
 
         <<~HTML
+            <!--[if mso | IE]>
+              <table
+                #{outlook_table_attrs}
+              >
+                <tr>
+                  <td#{outlook_td_attrs}>
+                    <v:image
+                      #{outlook_image_attrs}
+                    />
+            <![endif]-->
+            <div
+              #{div_attrs}
+            >
+              <table
+                #{table_attrs}
+              >
+                <tbody>
+                  <tr
+                    #{tr_attrs}
+                  >
+                    #{render_mode}
+                  </tr>
+                </tbody>
+            </table>
+          </div>
           <!--[if mso | IE]>
-            <table
-              #{outlook_table_attrs}
-            >
-              <tr>
-                <td#{outlook_td_attrs}>
-                  <v:image
-                    #{outlook_image_attrs}
-                  />
+                </td>
+              </tr>
+            </table>
           <![endif]-->
-          <div
-            #{div_attrs}
-          >
-            <table
-              #{table_attrs}
-            >
-              <tbody>
-                <tr
-                  #{tr_attrs}
-                >
-                  #{render_mode}
-                </tr>
-              </tbody>
-          </table>
-        </div>
-        <!--[if mso | IE]>
-              </td>
-            </tr>
-          </table>
-        <![endif]-->
         HTML
       end
 
@@ -289,8 +289,7 @@ module Emjay
                 </tr>
               CHILD
             end
-          }
-        )
+          })
 
         <<~HTML
           <!--[if mso | IE]>

@@ -44,11 +44,11 @@ class ComparisonHelpersTest < Minitest::Test
   def test_assert_html_equal_passes_for_whitespace_only_diff
     # These are the kind of differences between JS template literals and Ruby heredocs
     js_style = <<~HTML
-        <div
-           class="foo"
-        >
-          <p>content</p>
-        </div>
+      <div
+         class="foo"
+      >
+        <p>content</p>
+      </div>
     HTML
     ruby_style = <<~HTML
       <div class="foo">

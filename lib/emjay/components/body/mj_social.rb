@@ -129,8 +129,7 @@ module Emjay
                 <![endif]-->
               CHILD
             end
-          }
-        )
+          })
 
         <<~HTML
            <!--[if mso | IE]>

@@ -101,7 +101,7 @@ module Emjay
       end
 
       def render
-        hamburger_html = get_attribute("hamburger") == "hamburger" ? render_hamburger : ""
+        hamburger_html = (get_attribute("hamburger") == "hamburger") ? render_hamburger : ""
 
         div_attrs = html_attributes(
           class: "mj-inline-links",
@@ -110,8 +110,7 @@ module Emjay
 
         children = @props[:children] || []
         children_html = render_children(children,
-          attributes: {"navbarBaseUrl" => get_attribute("base-url")}
-        )
+          attributes: {"navbarBaseUrl" => get_attribute("base-url")})
 
         align = get_attribute("align")
 

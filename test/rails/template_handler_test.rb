@@ -22,7 +22,7 @@ class TemplateHandlerTest < Minitest::Test
   end
 
   def test_erb_interpolation_works
-    source = <<~'MJML'
+    source = <<~MJML
       <mjml><mj-body><mj-section><mj-column><mj-text><%= @greeting %></mj-text></mj-column></mj-section></mj-body></mjml>
     MJML
 

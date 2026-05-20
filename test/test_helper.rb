@@ -16,7 +16,7 @@ module EmjayTestHelpers
     out = html.dup
 
     # Normalize line endings
-    out.gsub!(/\r\n/, "\n")
+    out.gsub!("\r\n", "\n")
 
     # Collapse whitespace inside opening tags: <tag \n  attr="val"\n  >
     # becomes <tag attr="val">
@@ -60,7 +60,7 @@ module EmjayTestHelpers
   # diff on failure.
   def assert_html_equal(expected, actual, msg = nil)
     norm_expected = normalize_html(expected)
-    norm_actual   = normalize_html(actual)
+    norm_actual = normalize_html(actual)
 
     return if norm_expected == norm_actual
 
@@ -89,11 +89,9 @@ module EmjayTestHelpers
         "#{fail_msg}: expected text #{text.inspect} in #{selector}"
     end
 
-    if attrs
-      attrs.each do |attr_name, attr_value|
-        assert_equal attr_value.to_s, node[attr_name.to_s],
-          "#{fail_msg}: expected #{attr_name}=#{attr_value.inspect} on #{selector}"
-      end
+    attrs&.each do |attr_name, attr_value|
+      assert_equal attr_value.to_s, node[attr_name.to_s],
+        "#{fail_msg}: expected #{attr_name}=#{attr_value.inspect} on #{selector}"
     end
   end
 
@@ -141,7 +139,7 @@ module EmjayTestHelpers
 
   def unified_diff(expected, actual)
     expected_lines = expected.lines
-    actual_lines   = actual.lines
+    actual_lines = actual.lines
 
     first_diff = nil
     last_diff = nil
@@ -158,7 +156,7 @@ module EmjayTestHelpers
 
     ctx = 3
     from = [first_diff - ctx, 0].max
-    to   = [last_diff + ctx, max - 1].min
+    to = [last_diff + ctx, max - 1].min
 
     out = +""
     out << "--- expected\n+++ actual\n"

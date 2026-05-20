@@ -162,8 +162,7 @@ module Emjay
       def generate_radios(children)
         render_children(children,
           renderer: ->(component) { component.render_radio },
-          attributes: {"carouselId" => @carousel_id}
-        )
+          attributes: {"carouselId" => @carousel_id})
       end
 
       def generate_thumbnails(children)
@@ -176,8 +175,7 @@ module Emjay
             "tb-width" => thumbnails_width,
             "carouselId" => @carousel_id
           },
-          renderer: ->(component) { component.render_thumbnail }
-        )
+          renderer: ->(component) { component.render_thumbnail })
       end
 
       def generate_controls(children, direction, icon)
@@ -231,8 +229,7 @@ module Emjay
         div_attrs = html_attributes(class: "mj-carousel-images")
 
         images_html = render_children(children,
-          attributes: {"border-radius" => get_attribute("border-radius")}
-        )
+          attributes: {"border-radius" => get_attribute("border-radius")})
 
         <<~HTML
           <td
@@ -278,8 +275,7 @@ module Emjay
 
         ConditionalTag.mso_conditional_tag(
           render_children([children[0]],
-            attributes: {"border-radius" => get_attribute("border-radius")}
-          )
+            attributes: {"border-radius" => get_attribute("border-radius")})
         )
       end
 
@@ -387,24 +383,24 @@ module Emjay
       def build_fallback_css(length)
         id = @carousel_id
         <<~CSS
-            .mj-carousel noinput { display:block !important; }
-            .mj-carousel noinput .mj-carousel-image-1 { display: block !important;  }
-            .mj-carousel noinput .mj-carousel-arrows,
-            .mj-carousel noinput .mj-carousel-thumbnails { display: none !important; }
+          .mj-carousel noinput { display:block !important; }
+          .mj-carousel noinput .mj-carousel-image-1 { display: block !important;  }
+          .mj-carousel noinput .mj-carousel-arrows,
+          .mj-carousel noinput .mj-carousel-thumbnails { display: none !important; }
 
-            [owa] .mj-carousel-thumbnail { display: none !important; }
+          [owa] .mj-carousel-thumbnail { display: none !important; }
 
-            @media screen yahoo {
-                .mj-carousel-#{id}-icons-cell,
-                .mj-carousel-previous-icons,
-                .mj-carousel-next-icons {
-                    display: none !important;
-                }
+          @media screen yahoo {
+              .mj-carousel-#{id}-icons-cell,
+              .mj-carousel-previous-icons,
+              .mj-carousel-next-icons {
+                  display: none !important;
+              }
 
-                .mj-carousel-#{id}-radio-1:checked #{"+ *" * (length - 1)}+ .mj-carousel-content .mj-carousel-#{id}-thumbnail-1 {
-                    border-color: transparent;
-                }
-            }
+              .mj-carousel-#{id}-radio-1:checked #{"+ *" * (length - 1)}+ .mj-carousel-content .mj-carousel-#{id}-thumbnail-1 {
+                  border-color: transparent;
+              }
+          }
         CSS
       end
     end

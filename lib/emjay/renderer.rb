@@ -66,7 +66,7 @@ module Emjay
         end
 
         if component.respond_to?(:render)
-          return component.render
+          component.render
         end
       }
 
@@ -121,7 +121,7 @@ module Emjay
       content = MinifyOutlookConditionals.call(content)
 
       # Handle mj-raw outside body (before-doctype)
-      mjml_root&.xpath("mj-raw").each do |raw_el|
+      mjml_root&.xpath("mj-raw")&.each do |raw_el|
         if raw_el["position"] == "file-start"
           global_data.before_doctype += raw_el.inner_html.gsub(RAW_LT_PLACEHOLDER, "<")
         end
@@ -170,9 +170,7 @@ module Emjay
       end
 
       # Merge outlook conditionals
-      content = MergeOutlookConditionals.call(content)
-
-      content
+      MergeOutlookConditionals.call(content)
     end
 
     # Converts a Nokogiri element to a hash matching the JS parsed format
@@ -231,7 +229,7 @@ module Emjay
       next_parent_mj_class = attrs["mj-class"] || parent_mj_class
 
       # Merge: global defaults -> class attrs -> class default attrs -> element attrs (minus mj-class)
-      element_attrs = attrs.reject { |k, _| k == "mj-class" }
+      element_attrs = attrs.except("mj-class")
       merged_attrs = (global_data.default_attributes[tag_name] || {})
         .merge(attributes_classes)
         .merge(default_attrs_for_classes)

@@ -36,10 +36,10 @@ module Emjay
         val.push(*params)
       elsif val.is_a?(Hash)
         if params.length > 1
-          if val[params[0]].is_a?(Hash)
-            val[params[0]] = val[params[0]].merge(params[1])
+          val[params[0]] = if val[params[0]].is_a?(Hash)
+            val[params[0]].merge(params[1])
           else
-            val[params[0]] = params[1]
+            params[1]
           end
         else
           send(:"#{key}=", params[0])

@@ -78,7 +78,7 @@ module Emjay
 
         get_element_width = ->(width) {
           unless width
-            return "#{(container_width.to_i / non_raw_siblings.to_i)}px"
+            return "#{container_width.to_i / non_raw_siblings.to_i}px"
           end
 
           parsed = WidthParser.call(width, parse_float_to_int: false)
@@ -98,7 +98,7 @@ module Emjay
           <div#{html_attributes(class: classes_name, style: :div)}>
             <!--[if mso | IE]>
             <table#{html_attributes(
-              bgcolor: (get_attribute("background-color") == "none" ? nil : get_attribute("background-color")),
+              bgcolor: ((get_attribute("background-color") == "none") ? nil : get_attribute("background-color")),
               border: "0",
               cellpadding: "0",
               cellspacing: "0",
@@ -187,7 +187,7 @@ module Emjay
       end
 
       def format_float(value)
-        value == value.to_i ? value.to_i : value
+        (value == value.to_i) ? value.to_i : value
       end
     end
   end

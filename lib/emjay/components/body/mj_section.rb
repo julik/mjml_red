@@ -110,7 +110,7 @@ module Emjay
             "max-width" => container_width,
             "border-radius" => get_attribute("border-radius"),
             **(has_border_radius ? {"overflow" => "hidden"} : {}),
-            "margin-top" => (!is_first ? @context[:gap] : nil)
+            "margin-top" => ((!is_first) ? @context[:gap] : nil)
           },
           innerDiv: {
             "line-height" => "0",
@@ -197,7 +197,7 @@ module Emjay
             role: "presentation",
             style: {
               "width" => container_width.to_s,
-              "padding-top" => (!is_first ? @context[:gap] : nil)
+              "padding-top" => ((!is_first) ? @context[:gap] : nil)
             },
             width: container_width.to_i,
             **bgcolor_attr
@@ -260,7 +260,7 @@ module Emjay
             class: (full_width? ? nil : get_attribute("css-class")),
             style: :div
           )}>
-            #{has_bg ? "<div#{html_attributes(style: :innerDiv)}>" : ""}
+            #{"<div#{html_attributes(style: :innerDiv)}>" if has_bg}
             <table#{html_attributes(
               align: "center",
               background: (full_width? ? nil : get_attribute("background-url")),
@@ -284,7 +284,7 @@ module Emjay
                 </tr>
               </tbody>
             </table>
-            #{has_bg ? "</div>" : ""}
+            #{"</div>" if has_bg}
           </div>
         HTML
       end
@@ -296,7 +296,7 @@ module Emjay
             #{render_section}
             #{render_after}
           HTML
-          )
+                                )
         else
           <<~HTML
             #{render_before}
@@ -351,7 +351,7 @@ module Emjay
         when "center" then "50%"
         when "right" then "100%"
         else
-          bg_pos_x =~ /^\d+(\.\d+)?%$/ ? bg_pos_x : "50%"
+          /^\d+(\.\d+)?%$/.match?(bg_pos_x) ? bg_pos_x : "50%"
         end
 
         bg_pos_y = case bg_pos_y
@@ -359,7 +359,7 @@ module Emjay
         when "center" then "50%"
         when "bottom" then "100%"
         else
-          bg_pos_y =~ /^\d+(\.\d+)?%$/ ? bg_pos_y : "0%"
+          /^\d+(\.\d+)?%$/.match?(bg_pos_y) ? bg_pos_y : "0%"
         end
 
         bg_repeat = get_attribute("background-repeat") == "repeat"
@@ -372,7 +372,7 @@ module Emjay
         if bg_size == "cover" || bg_size == "contain"
           v_size_attributes = {
             size: "1,1",
-            aspect: (bg_size == "cover" ? "atleast" : "atmost")
+            aspect: ((bg_size == "cover") ? "atleast" : "atmost")
           }
         elsif bg_size != "auto"
           parts = bg_size.split(" ")
@@ -383,7 +383,7 @@ module Emjay
           end
         end
 
-        vml_type = get_attribute("background-repeat") == "no-repeat" ? "frame" : "tile"
+        vml_type = (get_attribute("background-repeat") == "no-repeat") ? "frame" : "tile"
         if bg_size == "auto"
           vml_type = "tile"
           v_origin_x = 0.5
@@ -393,28 +393,28 @@ module Emjay
         end
 
         <<~HTML
-          <!--[if mso | IE]>
-            <v:rect#{html_attributes(
-              style: full_width ? {"mso-width-percent" => "1000"} : {"width" => container_width},
-              "xmlns:v" => "urn:schemas-microsoft-com:vml",
-              fill: "true",
-              stroke: "false"
-            )}>
-            <v:fill#{html_attributes(
-              origin: "#{v_origin_x}, #{v_origin_y}",
-              position: "#{v_pos_x}, #{v_pos_y}",
-              src: get_attribute("background-url"),
-              color: get_attribute("background-color"),
-              type: vml_type,
-              **v_size_attributes
-            )} />
-            <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
-          <![endif]-->
-              #{content}
             <!--[if mso | IE]>
-            </v:textbox>
-          </v:rect>
-        <![endif]-->
+              <v:rect#{html_attributes(
+                :style => full_width ? {"mso-width-percent" => "1000"} : {"width" => container_width},
+                "xmlns:v" => "urn:schemas-microsoft-com:vml",
+                :fill => "true",
+                :stroke => "false"
+              )}>
+              <v:fill#{html_attributes(
+                origin: "#{v_origin_x}, #{v_origin_y}",
+                position: "#{v_pos_x}, #{v_pos_y}",
+                src: get_attribute("background-url"),
+                color: get_attribute("background-color"),
+                type: vml_type,
+                **v_size_attributes
+              )} />
+              <v:textbox style="mso-fit-shape-to-text:true" inset="0,0,0,0">
+            <![endif]-->
+                #{content}
+              <!--[if mso | IE]>
+              </v:textbox>
+            </v:rect>
+          <![endif]-->
         HTML
       end
 

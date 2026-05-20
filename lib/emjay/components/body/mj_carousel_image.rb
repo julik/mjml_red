@@ -96,7 +96,7 @@ module Emjay
         image = "<img\n        #{img_attrs} />"
 
         css_class = get_attribute("css-class") || ""
-        div_style = index == 0 ? "images.firstImageDiv" : "images.otherImageDiv"
+        div_style = (index == 0) ? "images.firstImageDiv" : "images.otherImageDiv"
         div_attrs = html_attributes(
           class: "mj-carousel-image mj-carousel-image-#{index + 1} #{css_class}",
           style: div_style
@@ -119,7 +119,7 @@ module Emjay
 
         input_attrs = html_attributes(
           class: "mj-carousel-radio mj-carousel-#{carousel_id}-radio mj-carousel-#{carousel_id}-radio-#{index + 1}",
-          checked: index == 0 ? "checked" : nil,
+          checked: (index == 0) ? "checked" : nil,
           type: "radio",
           name: "mj-carousel-radio-#{carousel_id}",
           id: "mj-carousel-#{carousel_id}-radio-#{index + 1}",

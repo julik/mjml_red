@@ -21,7 +21,7 @@ module Emjay
 
           if tag_name == "mj-class"
             name = attributes["name"]
-            add.call(:classes, name, attributes.reject { |k, _| k == "name" })
+            add.call(:classes, name, attributes.except("name"))
             add.call(:classes_default, name,
               child_children.each_with_object({}) { |cc, acc|
                 acc[cc[:tag_name]] = cc[:attributes] || {}

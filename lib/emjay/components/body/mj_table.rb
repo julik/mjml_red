@@ -96,7 +96,7 @@ module Emjay
         return width if width == "auto"
 
         parsed = WidthParser.call(width)
-        parsed[:unit] == "%" ? width : parsed[:parsed_width]
+        (parsed[:unit] == "%") ? width : parsed[:parsed_width]
       end
 
       def has_cellspacing?

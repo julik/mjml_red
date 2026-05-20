@@ -27,7 +27,7 @@ module Emjay
         children = @props[:children] || []
         container_width = @context[:container_width]
 
-        rendered = render_children(children, renderer: ->(component) {
+        render_children(children, renderer: ->(component) {
           if component.class.raw_element?
             component.render
           else
@@ -48,8 +48,6 @@ module Emjay
             HTML
           end
         })
-
-        rendered
       end
     end
   end
