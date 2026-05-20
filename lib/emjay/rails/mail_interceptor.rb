@@ -24,7 +24,11 @@ module Emjay
       private
 
       def compile_part!(part)
-        return if part.multipart?
+        if part.multipart?
+          part.parts.each { |p| compile_part!(p) }
+          return
+        end
+
         return unless part.content_type&.include?("text/html") || part.content_type.nil?
 
         body = part.body.decoded

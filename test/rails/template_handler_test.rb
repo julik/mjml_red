@@ -95,6 +95,29 @@ class MailInterceptorTest < Minitest::Test
     assert_equal "Plain text fallback", message.text_part.body.decoded
   end
 
+  def test_compiles_mjml_in_multipart_mixed_with_attachment
+    mjml = "<mjml><mj-body><mj-section><mj-column><mj-text>With Attachment</mj-text></mj-column></mj-section></mj-body></mjml>"
+
+    # Build nested structure: multipart/mixed > [multipart/alternative > [text/plain, text/html], application/pdf]
+    alt = Mail::Part.new(content_type: "multipart/alternative")
+    alt.add_part Mail::Part.new(content_type: "text/plain", body: "Plain text")
+    alt.add_part Mail::Part.new(content_type: "text/html", body: mjml)
+
+    message = Mail::Message.new
+    message.content_type = "multipart/mixed"
+    message.add_part alt
+    message.add_part Mail::Part.new(content_type: "application/pdf", body: "fake-pdf-bytes")
+
+    assert message.multipart?
+    assert message.parts.any? { |p| p.multipart? }
+
+    Emjay::Rails::MailInterceptor.delivering_email(message)
+
+    assert_includes message.html_part.body.decoded, "<!doctype html>"
+    assert_includes message.html_part.body.decoded, "With Attachment"
+    assert_equal "Plain text", message.text_part.body.decoded
+  end
+
   def test_non_mjml_email_passes_through
     original_body = "<html><body>Regular HTML</body></html>"
     message = Mail::Message.new
