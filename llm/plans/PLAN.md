@@ -1,4 +1,4 @@
-# Plan: Pure-Ruby MJML Port (`mjml_red`)
+# Plan: Pure-Ruby MJML Port (`emjay`)
 
 ## Overview
 
@@ -36,8 +36,8 @@ This maps cleanly to Ruby. The JS version uses `htmlparser2` (a lenient HTML par
 
 ```
 lib/
-  mjml_red.rb                       # Entry point: MjmlRed.to_html(mjml_string, options)
-  mjml_red/
+  emjay.rb                       # Entry point: Emjay.to_html(mjml_string, options)
+  emjay/
     version.rb
     parser.rb                       # Nokogiri XML parsing → node tree
     renderer.rb                     # Orchestrates the full pipeline
@@ -125,7 +125,7 @@ lib/
 4. **Registry** (`registry.rb`)
    - Hash mapping tag names → component classes
    - `register_component(klass)`
-   - `MjmlRed.components` — the global registry
+   - `Emjay.components` — the global registry
    - All standard components auto-registered on require
 
 5. **Renderer** (`renderer.rb`)
@@ -289,7 +289,7 @@ test/
       ...
 ```
 
-The Ruby test loads the `.mjml`, renders via `MjmlRed.to_html`, and compares against `.expected.html`. Comparison should normalize whitespace (collapse runs of whitespace, strip leading/trailing) since the JS version produces messy whitespace from template literals and our Ruby output will differ. An HTML-aware diff (or just whitespace-normalized string comparison) is sufficient.
+The Ruby test loads the `.mjml`, renders via `Emjay.to_html`, and compares against `.expected.html`. Comparison should normalize whitespace (collapse runs of whitespace, strip leading/trailing) since the JS version produces messy whitespace from template literals and our Ruby output will differ. An HTML-aware diff (or just whitespace-normalized string comparison) is sufficient.
 
 ```ruby
 # test/component_test.rb (Minitest example)
@@ -298,7 +298,7 @@ Dir["test/fixtures/**/*.mjml"].each do |mjml_path|
   define_method("test_#{mjml_path}") do
     mjml = File.read(mjml_path)
     expected = normalize_whitespace(File.read(expected_path))
-    actual = normalize_whitespace(MjmlRed.to_html(mjml))
+    actual = normalize_whitespace(Emjay.to_html(mjml))
     assert_equal expected, actual
   end
 end
@@ -337,7 +337,7 @@ class AccordionPaddingTest < Minitest::Test
       </mjml>
     MJML
 
-    html = MjmlRed.to_html(input)
+    html = Emjay.to_html(input)
     doc = Nokogiri::HTML(html)
 
     %w[padding-left padding-right padding-top padding-bottom].each do |prop|
@@ -395,10 +395,10 @@ The critical path is Phase 1 + Phase 3. Once `mj-section` and `mj-column` render
 
 ```ruby
 # Basic usage
-html = MjmlRed.to_html('<mjml><mj-body><mj-section>...</mj-section></mj-body></mjml>')
+html = Emjay.to_html('<mjml><mj-body><mj-section>...</mj-section></mj-body></mjml>')
 
 # With options
-html = MjmlRed.to_html(mjml_string,
+html = Emjay.to_html(mjml_string,
   fonts: { "Open Sans" => "https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,700" },
   keep_comments: true,
   css_inline: true  # whether to run CSS inliner

@@ -16,7 +16,7 @@ class ShorthandParserTest < Minitest::Test
   TEST_VALUES.each_with_index do |test_case, idx|
     DIRECTIONS.each do |dir|
       define_method("test_case_#{idx + 1}_#{dir}") do
-        result = MjmlRed::ShorthandParser.call(test_case[:input], dir)
+        result = Emjay::ShorthandParser.call(test_case[:input], dir)
         assert_equal test_case[:output][dir.to_sym], result,
           "Case #{idx + 1}: shorthandParser(#{test_case[:input].inspect}, #{dir}) failed"
       end
@@ -26,14 +26,14 @@ end
 
 class BorderParserTest < Minitest::Test
   def test_parses_border_width
-    assert_equal 1, MjmlRed::BorderParser.call("1px solid black")
+    assert_equal 1, Emjay::BorderParser.call("1px solid black")
   end
 
   def test_returns_zero_for_no_match
-    assert_equal 0, MjmlRed::BorderParser.call("none")
+    assert_equal 0, Emjay::BorderParser.call("none")
   end
 
   def test_returns_zero_for_empty
-    assert_equal 0, MjmlRed::BorderParser.call("0")
+    assert_equal 0, Emjay::BorderParser.call("0")
   end
 end

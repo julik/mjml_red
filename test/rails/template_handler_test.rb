@@ -2,11 +2,11 @@
 
 require "test_helper"
 require "action_view"
-require "mjml_red/rails/template_handler"
+require "emjay/rails/template_handler"
 
 class TemplateHandlerTest < Minitest::Test
   def setup
-    ActionView::Template.register_template_handler(:mjml, MjmlRed::Rails::TemplateHandler)
+    ActionView::Template.register_template_handler(:mjml, Emjay::Rails::TemplateHandler)
   end
 
   def test_static_mjml_renders_to_html

@@ -5,7 +5,27 @@
       "Bash(find:*)",
       "Bash(git init:*)",
       "Bash(/Users/julik/Code/libs/mjml_red/.gitignore:*)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(bundle install:*)",
+      "Bash(bundle exec:*)",
+      "Bash(node:*)",
+      "Bash(npm install:*)",
+      "Bash(npx lerna:*)",
+      "Bash(grep:*)",
+      "Bash(git status:*)",
+      "WebSearch",
+      "WebFetch(domain:premailer.github.io)",
+      "WebFetch(domain:www.rubydoc.info)",
+      "WebFetch(domain:rubygems.org)",
+      "WebFetch(domain:midflight.io)",
+      "Bash(ruby:*)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:www.mcdonaldland.info)",
+      "WebFetch(domain:bhserna.com)",
+      "WebFetch(domain:railscasts.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git mv:*)"
     ]
   }
 }

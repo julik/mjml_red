@@ -2,9 +2,9 @@
 
 require "minitest/autorun"
 require "nokogiri"
-require "mjml_red"
+require "emjay"
 
-module MjmlRedTestHelpers
+module EmjayTestHelpers
   # Normalizes an HTML string for comparison by collapsing whitespace
   # differences that don't affect rendering.
   #
@@ -127,9 +127,9 @@ module MjmlRedTestHelpers
   end
 
   # Renders MJML and returns the HTML string. Convenience for tests that
-  # just need to call `render(mjml)` without repeating MjmlRed.to_html.
+  # just need to call `render(mjml)` without repeating Emjay.to_html.
   def render(mjml, **options)
-    MjmlRed.to_html(mjml, options)
+    Emjay.to_html(mjml, options)
   end
 
   private
@@ -181,4 +181,4 @@ module MjmlRedTestHelpers
 end
 
 # Mix into all test classes
-Minitest::Test.include(MjmlRedTestHelpers)
+Minitest::Test.include(EmjayTestHelpers)

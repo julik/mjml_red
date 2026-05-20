@@ -1,10 +1,10 @@
-# mjml_red
+# emjay
 
 A pure-Ruby implementation of [MJML](https://mjml.io), the email markup language. Converts MJML templates to responsive HTML emails — no Node.js, no native extensions, no shelling out.
 
 ## Feature parity with MJML
 
-mjml_red implements the full set of standard MJML components:
+emjay implements the full set of standard MJML components:
 
 **Head components:** `mj-head`, `mj-attributes`, `mj-style` (including `inline`), `mj-font`, `mj-title`, `mj-preview`, `mj-breakpoint`, `mj-html-attributes`
 
@@ -19,7 +19,7 @@ Output is tested against the upstream [MJML 4 JavaScript implementation](https:/
 Add to your Gemfile:
 
 ```ruby
-gem "mjml_red"
+gem "emjay"
 ```
 
 Runtime dependencies: `nokogiri`, `premailer`.
@@ -29,7 +29,7 @@ Runtime dependencies: `nokogiri`, `premailer`.
 ### Standalone
 
 ```ruby
-require "mjml_red"
+require "emjay"
 
 mjml = <<~MJML
   <mjml>
@@ -43,12 +43,12 @@ mjml = <<~MJML
   </mjml>
 MJML
 
-html = MjmlRed.to_html(mjml)
+html = Emjay.to_html(mjml)
 ```
 
 ### Rails
 
-mjml_red includes a Railtie that registers an ActionView template handler automatically. Create templates with the `.html.mjml` extension:
+emjay includes a Railtie that registers an ActionView template handler automatically. Create templates with the `.html.mjml` extension:
 
 ```
 app/views/user_mailer/welcome.html.mjml
@@ -87,7 +87,7 @@ Rails resolves the template automatically: `.mjml` selects the handler, `.html` 
 - [mjml-ruby](https://github.com/kolybasov/mjml-ruby) — Ruby wrapper around the MJML Node.js parser. Also requires Node.js.
 - [mrml-ruby](https://github.com/jdrouet/mrml/tree/main/packages/mrml-ruby) — Ruby bindings to [MRML](https://github.com/jdrouet/mrml), a Rust reimplementation of MJML. Requires a compiled native extension.
 
-mjml_red differs from all of the above by being pure Ruby — it has no dependency on Node.js or native extensions.
+emjay differs from all of the above by being pure Ruby — it has no dependency on Node.js or native extensions.
 
 ## License
 

@@ -32,7 +32,7 @@ class DescriptiveNameTest < Minitest::Test
       </mjml>
     MJML
 
-    html = MjmlRed.to_html(input)
+    html = Emjay.to_html(input)
     doc = Nokogiri::HTML(html)
 
     # assertions here

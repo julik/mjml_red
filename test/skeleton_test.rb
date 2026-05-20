@@ -56,7 +56,7 @@ class SkeletonTest < Minitest::Test
 
   TEST_CASES.each_with_index do |test_case, idx|
     define_method("test_style_tag_count_case_#{idx + 1}") do
-      html = MjmlRed::Skeleton.call(test_case[:options])
+      html = Emjay::Skeleton.call(test_case[:options])
       doc = Nokogiri::HTML(html)
       # Count style tags in head (Nokogiri can parse regular ones but not
       # those inside conditional comments, so we count the same way as upstream)
