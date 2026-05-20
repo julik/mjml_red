@@ -19,6 +19,7 @@ require_relative "mjml_red/helpers/minify_outlook_conditionals"
 require_relative "mjml_red/helpers/fonts"
 require_relative "mjml_red/helpers/media_queries"
 require_relative "mjml_red/helpers/styles"
+require_relative "mjml_red/helpers/make_lower_breakpoint"
 
 # Head components
 require_relative "mjml_red/components/head/mj_head"
@@ -37,6 +38,12 @@ require_relative "mjml_red/components/body/mj_column"
 require_relative "mjml_red/components/body/mj_text"
 require_relative "mjml_red/components/body/mj_wrapper"
 require_relative "mjml_red/components/body/mj_group"
+require_relative "mjml_red/components/body/mj_image"
+require_relative "mjml_red/components/body/mj_button"
+require_relative "mjml_red/components/body/mj_divider"
+require_relative "mjml_red/components/body/mj_spacer"
+require_relative "mjml_red/components/body/mj_table"
+require_relative "mjml_red/components/body/mj_raw"
 
 module MjmlRed
   def self.to_html(mjml_string, options = {})

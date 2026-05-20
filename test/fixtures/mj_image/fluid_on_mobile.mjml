@@ -1,0 +1,9 @@
+<mjml>
+  <mj-body>
+    <mj-section>
+      <mj-column>
+        <mj-image src="https://example.com/image.jpg" fluid-on-mobile="true" />
+      </mj-column>
+    </mj-section>
+  </mj-body>
+</mjml>

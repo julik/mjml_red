@@ -118,10 +118,10 @@ module MjmlRed
 
         component = component_class.new(child_data)
 
-        if component.respond_to?(:head_style) && component.head_style
+        if component.respond_to?(:head_style)
           @context[:add_head_style]&.call(child[:tag_name], component.method(:head_style))
         end
-        if component.respond_to?(:component_head_style) && component.component_head_style
+        if component.respond_to?(:component_head_style)
           @context[:add_component_head_style]&.call(component.method(:component_head_style))
         end
 
