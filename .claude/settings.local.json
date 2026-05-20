@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(ls:*)",
+      "Bash(find:*)",
+      "Bash(git init:*)",
+      "Bash(/Users/julik/Code/libs/mjml_red/.gitignore:*)",
+      "Bash(git add:*)"
+    ]
+  }
+}
