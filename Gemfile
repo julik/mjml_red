@@ -1,7 +1,6 @@
 source "https://rubygems.org"
 
-gem "nokogiri"
-gem "premailer"
+gemspec
 
 group :test do
   gem "minitest"

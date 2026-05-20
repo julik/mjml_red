@@ -1,3 +1,10 @@
+PATH
+  remote: .
+  specs:
+    emjay (0.1.0)
+      nokogiri (>= 1.12)
+      premailer
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -143,9 +150,8 @@ PLATFORMS
 
 DEPENDENCIES
   actionview
+  emjay!
   minitest
-  nokogiri
-  premailer
   railties
   rake
 
