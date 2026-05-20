@@ -9,9 +9,19 @@ require_relative "helpers/minify_outlook_conditionals"
 
 module MjmlRed
   module Renderer
+    # HTML void elements that need self-closing conversion for XML parsing.
+    VOID_ELEMENTS_RE = /(<(?:br|hr|img|input|meta|link|area|base|col|embed|param|source|track|wbr)(?:\s[^>]*)?)>/i
+
     def self.call(mjml_string, options = {})
-      # 1. Parse MJML string with Nokogiri
-      doc = Nokogiri::XML(mjml_string)
+      # 1. Pre-process and parse MJML string with Nokogiri::XML.
+      # Two fixups are needed to bridge MJML (which embeds HTML content) and XML:
+      #   a) Convert HTML void elements to self-closing (e.g. <br> → <br/>)
+      #      so XML parsing doesn't treat them as unclosed tags
+      #   b) Escape bare < characters from template syntax in mj-raw
+      #      (e.g. { if item < 5 }) so they don't break XML parsing
+      preprocessed = mjml_string.gsub(VOID_ELEMENTS_RE, '\1/>')
+      preprocessed = preprocessed.gsub(/<(?![a-zA-Z\/!?])/, RAW_LT_PLACEHOLDER)
+      doc = Nokogiri::XML(preprocessed)
       mjml_root = doc.at_xpath("//mjml") || doc.root
 
       # 2. Build GlobalData
@@ -113,14 +123,18 @@ module MjmlRed
       # Handle mj-raw outside body (before-doctype)
       mjml_root&.xpath("mj-raw").each do |raw_el|
         if raw_el["position"] == "file-start"
-          global_data.before_doctype += raw_el.inner_html
+          global_data.before_doctype += raw_el.inner_html.gsub(RAW_LT_PLACEHOLDER, "<")
         end
       end
 
       # Apply html_attributes via Nokogiri CSS selectors.
-      # Use XML mode to avoid Nokogiri HTML parser stripping <body> attributes.
+      # Use XML fragment for parsing (preserves table structure, unlike HTML5
+      # which foster-parents text out of tables). Protect bare < from template
+      # syntax (mj-raw) with placeholders so XML parsing succeeds. Use custom
+      # serializer so text nodes (including > in templates) pass through raw.
       unless global_data.html_attributes.empty?
-        content_doc = Nokogiri::XML.fragment(content)
+        escaped = content.gsub(/<(?![a-zA-Z\/!?])/, RAW_LT_PLACEHOLDER)
+        content_doc = Nokogiri::XML.fragment(escaped)
         global_data.html_attributes.each do |selector, data|
           content_doc.css(selector).each do |node|
             data.each do |attr_name, value|
@@ -128,7 +142,7 @@ module MjmlRed
             end
           end
         end
-        content = content_doc.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::NO_DECLARATION | Nokogiri::XML::Node::SaveOptions::AS_HTML)
+        content = serialize_fragment(content_doc).gsub(RAW_LT_PLACEHOLDER, "<")
       end
 
       # Wrap in skeleton
@@ -174,7 +188,9 @@ module MjmlRed
       tag_name = element.name
       component_class = Registry.find(tag_name)
       content = if component_class&.ending_tag?
-        element.inner_html.strip
+        inner = element.inner_html.strip
+        # Restore escaped bare < characters (from template syntax in mj-raw etc.)
+        inner.gsub(RAW_LT_PLACEHOLDER, "<")
       else
         element.children.select(&:text?).map(&:text).join.strip
       end
@@ -252,6 +268,37 @@ module MjmlRed
       premailer.to_inline_css
     end
 
-    private_class_method :nokogiri_to_hash, :apply_attributes_fn, :inline_css
+    RAW_LT_PLACEHOLDER = "___MJML_RAW_LT___"
+    VOID_ELEMENTS = %w[area base br col embed hr img input link meta param source track wbr].freeze
+
+    # Custom serializer that preserves raw text content (no entity encoding
+    # for >, <, etc. in text nodes). Needed because mj-raw injects template
+    # syntax like { if item < 5 } that must pass through literally.
+    def self.serialize_fragment(node)
+      node.children.map { |c| serialize_node(c) }.join
+    end
+
+    def self.serialize_node(node)
+      if node.text?
+        node.text
+      elsif node.comment?
+        "<!--#{node.content}-->"
+      elsif node.element?
+        attrs = node.attributes.values.map { |a|
+          val = a.value.gsub("&", "&amp;").gsub('"', "&quot;")
+          " #{a.name}=\"#{val}\""
+        }.join
+        if VOID_ELEMENTS.include?(node.name) && node.children.empty?
+          "<#{node.name}#{attrs}>"
+        else
+          "<#{node.name}#{attrs}>#{serialize_fragment(node)}</#{node.name}>"
+        end
+      else
+        node.to_html
+      end
+    end
+
+    private_class_method :nokogiri_to_hash, :apply_attributes_fn, :inline_css,
+      :serialize_fragment, :serialize_node
   end
 end

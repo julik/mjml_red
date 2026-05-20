@@ -47,22 +47,26 @@ class HtmlAttributesTest < Minitest::Test
     image_tds = doc.css(".image td").map { |el| el["data-name"] }
     assert_equal ["43"], image_tds
 
-    # Note: The upstream test also checks that mj-raw template syntax like
-    # { if item < 5 } is preserved in correct order. However, Nokogiri XML
-    # mode mangles < characters in mj-raw content (it interprets them as
-    # tag starts). Template syntax without < works fine:
+    # Verify mj-raw template syntax is preserved in correct order in the output.
+    # Uses progressive search (each string must appear after the previous one)
+    # because some strings like class="text" appear multiple times.
     expected = [
+      "{ if item < 5 }",
       'class="section"',
+      "{ if item > 10 }",
       'class="text"',
       "{ item }",
       "{ end if }",
-      "{ item + 1 }"
+      'class="text"',
+      "{ item + 1 }",
+      "{ end if }"
     ]
 
-    indexes = expected.map { |str| html.index(str) }
-    indexes.each_with_index do |idx, i|
-      refute_nil idx, "Expected to find '#{expected[i]}' in output"
+    pos = 0
+    expected.each do |str|
+      idx = html.index(str, pos)
+      refute_nil idx, "Expected to find '#{str}' in output after position #{pos}"
+      pos = idx + str.length
     end
-    assert_equal indexes, indexes.sort, "Content should be in correct order"
   end
 end
