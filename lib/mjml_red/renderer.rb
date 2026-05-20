@@ -150,6 +150,11 @@ module MjmlRed
         dir: global_data.dir
       )
 
+      # CSS inlining for <mj-style inline="inline">
+      if global_data.inline_style.any?
+        content = inline_css(content, global_data.inline_style.join("\n"))
+      end
+
       # Merge outlook conditionals
       content = MergeOutlookConditionals.call(content)
 
@@ -229,6 +234,24 @@ module MjmlRed
       )
     end
 
-    private_class_method :nokogiri_to_hash, :apply_attributes_fn
+    # Inlines extra CSS rules into element style attributes using premailer.
+    # Mirrors the JS behavior: only the extra CSS (from <mj-style inline="inline">)
+    # is inlined; existing <style> tags in the document are preserved as-is.
+    def self.inline_css(html, extra_css)
+      require "premailer"
+
+      premailer = Premailer.new(
+        html,
+        with_html_string: true,
+        css_string: extra_css,
+        include_style_tags: false,
+        include_link_tags: false,
+        preserve_styles: true,
+        adapter: :nokogiri
+      )
+      premailer.to_inline_css
+    end
+
+    private_class_method :nokogiri_to_hash, :apply_attributes_fn, :inline_css
   end
 end

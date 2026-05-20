@@ -124,8 +124,37 @@ class HeadComponentsTest < Minitest::Test
 
     # Block style should appear in <style> tag
     assert_includes html, ".block-style { color: blue; }"
-    # Inline style is collected but not applied without CSS inlining (Phase 6)
-    # Just verify it doesn't appear in <style> tags
+    # Inline style should not appear in <style> tags — it gets inlined into elements
+    refute_includes html, ".inline-style"
+  end
+
+  def test_mj_style_inline_applies_css_to_elements
+    html = render(<<~MJML)
+      <mjml>
+        <mj-head>
+          <mj-style inline="inline">
+            .highlight { color: red; font-weight: bold; }
+          </mj-style>
+        </mj-head>
+        <mj-body>
+          <mj-section>
+            <mj-column>
+              <mj-text css-class="highlight">Styled text</mj-text>
+            </mj-column>
+          </mj-section>
+        </mj-body>
+      </mjml>
+    MJML
+
+    doc = Nokogiri::HTML(html)
+    highlighted = doc.at_css(".highlight")
+    assert highlighted, "Should find element with .highlight class"
+
+    style = highlighted["style"] || ""
+    assert_includes style, "color"
+    assert_includes style, "red"
+    assert_includes style, "font-weight"
+    assert_includes style, "bold"
   end
 
   def test_mj_attributes_with_mj_class
