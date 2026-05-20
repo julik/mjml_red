@@ -10,5 +10,6 @@ group :test do
   gem "minitest"
   gem "rake"
   gem "actionview"
+  gem "actionmailer"
   gem "railties"
 end

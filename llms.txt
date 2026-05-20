@@ -12,7 +12,11 @@ The core API is a single method:
 
 ## Rails integration
 
-emjay registers an ActionView template handler via a Railtie. No configuration needed — just add `gem "emjay"` to the Gemfile.
+emjay registers an ActionView template handler and an ActionMailer interceptor via a Railtie. No configuration needed — just add `gem "emjay"` to the Gemfile.
+
+### How it works
+
+The `.mjml` template handler is an ERB passthrough — it does not compile MJML itself. An ActionMailer interceptor (`Emjay::Rails::MailInterceptor`) detects `<mjml` in the message body after Rails has assembled the full render (template + layout), then compiles MJML → HTML in one pass. This architecture enables MJML layouts.
 
 ### Template naming
 
@@ -24,7 +28,7 @@ Rails resolves this as: `.mjml` selects the emjay handler, `.html` sets the outp
 
 ### ERB is always available
 
-The handler chains through ERB before compiling MJML. All ERB tags (`<%= %>`, `<% %>`, `<%# %>`) work inside `.mjml` templates. There is no separate `.mjml.erb` extension — ERB support is built in.
+The handler chains through ERB. All ERB tags (`<%= %>`, `<% %>`, `<%# %>`) work inside `.mjml` templates. There is no separate `.mjml.erb` extension — ERB support is built in.
 
 Use ERB exactly as you would in any other Rails template:
 
@@ -32,6 +36,23 @@ Use ERB exactly as you would in any other Rails template:
 - Helpers: `<%= number_to_currency(@amount) %>`
 - Partials: `<%= render "shared/header" %>`
 - Conditionals: `<% if @user.premium? %> ... <% end %>`
+
+### Layouts
+
+MJML layouts work like regular Rails mailer layouts. The layout provides the `<mjml>` / `<mj-body>` wrapper, and `yield` receives the template's MJML content sections:
+
+    app/views/layouts/mailer.html.mjml   — wraps yield with <mjml><mj-body>...</mj-body></mjml>
+    app/views/user_mailer/welcome.html.mjml — contains only <mj-section> content
+
+Set the layout in your mailer: `layout "mailer"`
+
+### Partials
+
+MJML partials work with the standard `render` helper. Use `.html.mjml` extension for partials that contain MJML components:
+
+    app/views/shared/_header.html.mjml
+
+Render them as usual: `<%= render "shared/header" %>`
 
 ### Follow host app conventions
 

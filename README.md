@@ -81,6 +81,70 @@ end
 
 Rails resolves the template automatically: `.mjml` selects the handler, `.html` sets the MIME type. If you also provide `welcome.text.erb`, ActionMailer sends a multipart email with both HTML and plain text parts.
 
+### Layouts
+
+MJML layouts work just like regular Rails mailer layouts. Create a layout that wraps `yield` with the MJML boilerplate:
+
+```erb
+<%# app/views/layouts/mailer.html.mjml %>
+<mjml>
+  <mj-head>
+    <mj-attributes>
+      <mj-all font-family="Helvetica, Arial, sans-serif" />
+    </mj-attributes>
+  </mj-head>
+  <mj-body>
+    <%= yield %>
+  </mj-body>
+</mjml>
+```
+
+Then your templates contain only the content sections:
+
+```erb
+<%# app/views/user_mailer/welcome.html.mjml %>
+<mj-section>
+  <mj-column>
+    <mj-text>Welcome, <%= @user.name %>!</mj-text>
+  </mj-column>
+</mj-section>
+```
+
+Set the layout in your mailer as usual:
+
+```ruby
+class UserMailer < ApplicationMailer
+  layout "mailer"
+end
+```
+
+### Partials
+
+MJML partials work with the standard `render` helper. Use them to share common sections across emails:
+
+```erb
+<%# app/views/shared/_header.html.mjml %>
+<mj-section background-color="#f0f0f0">
+  <mj-column>
+    <mj-image src="<%= @logo_url %>" width="150px" />
+  </mj-column>
+</mj-section>
+```
+
+```erb
+<%# app/views/user_mailer/welcome.html.mjml %>
+<%= render "shared/header" %>
+<mj-section>
+  <mj-column>
+    <mj-text>Welcome!</mj-text>
+  </mj-column>
+</mj-section>
+```
+
+### How it works
+
+The `.mjml` template handler is an ERB passthrough — it does not compile MJML itself. Instead, an ActionMailer interceptor (`Emjay::Rails::MailInterceptor`) compiles the assembled MJML to HTML after Rails has applied layouts and partials. This means `yield` in a layout receives MJML (not HTML), and the full document is compiled in one pass.
+
 ## Other Ruby MJML implementations
 
 - [mjml-rails](https://github.com/sighmon/mjml-rails) — Rails integration that shells out to the MJML Node.js binary. Requires Node.js at runtime.
