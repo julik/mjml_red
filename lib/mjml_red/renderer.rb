@@ -117,6 +117,20 @@ module MjmlRed
         end
       end
 
+      # Apply html_attributes via Nokogiri CSS selectors.
+      # Use XML mode to avoid Nokogiri HTML parser stripping <body> attributes.
+      unless global_data.html_attributes.empty?
+        content_doc = Nokogiri::XML.fragment(content)
+        global_data.html_attributes.each do |selector, data|
+          content_doc.css(selector).each do |node|
+            data.each do |attr_name, value|
+              node[attr_name] = value || ""
+            end
+          end
+        end
+        content = content_doc.to_xml(save_with: Nokogiri::XML::Node::SaveOptions::NO_DECLARATION | Nokogiri::XML::Node::SaveOptions::AS_HTML)
+      end
+
       # Wrap in skeleton
       content = Skeleton.call(
         before_doctype: global_data.before_doctype,

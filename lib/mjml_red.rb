@@ -24,6 +24,11 @@ require_relative "mjml_red/helpers/styles"
 require_relative "mjml_red/components/head/mj_head"
 require_relative "mjml_red/components/head/mj_attributes"
 require_relative "mjml_red/components/head/mj_style"
+require_relative "mjml_red/components/head/mj_font"
+require_relative "mjml_red/components/head/mj_title"
+require_relative "mjml_red/components/head/mj_preview"
+require_relative "mjml_red/components/head/mj_breakpoint"
+require_relative "mjml_red/components/head/mj_html_attributes"
 
 # Body components
 require_relative "mjml_red/components/body/mj_body"
