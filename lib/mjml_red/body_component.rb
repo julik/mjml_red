@@ -12,9 +12,17 @@ module MjmlRed
     end
 
     # Converts a style hash (or style name string) to an inline CSS string.
+    # Supports dot-notation for nested style lookups (e.g., "carousel.div").
     def styles(name_or_hash)
       styles_object = if name_or_hash.is_a?(String)
-        get_styles[name_or_hash.to_sym] || get_styles[name_or_hash]
+        if name_or_hash.include?(".")
+          parts = name_or_hash.split(".")
+          result = get_styles
+          parts.each { |part| result = result&.dig(part.to_sym) || result&.dig(part) }
+          result
+        else
+          get_styles[name_or_hash.to_sym] || get_styles[name_or_hash]
+        end
       elsif name_or_hash.is_a?(Symbol)
         get_styles[name_or_hash]
       else

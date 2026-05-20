@@ -1,0 +1,9 @@
+<mjml>
+  <mj-body>
+    <mj-hero mode="fluid-height" background-width="600px" background-url="https://cloud.example.com/img/hero.jpg" background-color="#2f2936" padding="100px 0px" width="100%">
+      <mj-text padding="20px" color="#ffffff" align="center" font-size="20px">
+        Fluid hero
+      </mj-text>
+    </mj-hero>
+  </mj-body>
+</mjml>

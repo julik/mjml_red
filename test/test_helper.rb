@@ -48,6 +48,10 @@ module MjmlRedTestHelpers
     # Collapse multiple blank lines into one
     out.gsub!(/\n{2,}/, "\n")
 
+    # Normalize random hex IDs used by carousel and navbar hamburger.
+    # These are 16-char hex strings that differ between JS and Ruby runs.
+    out.gsub!(/([0-9a-f]{16})(?=[^0-9a-f]|$)/) { "NORMALIZED_ID" }
+
     out.strip
   end
 

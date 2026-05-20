@@ -20,6 +20,7 @@ require_relative "mjml_red/helpers/fonts"
 require_relative "mjml_red/helpers/media_queries"
 require_relative "mjml_red/helpers/styles"
 require_relative "mjml_red/helpers/make_lower_breakpoint"
+require_relative "mjml_red/helpers/gen_random_hex_string"
 
 # Head components
 require_relative "mjml_red/components/head/mj_head"
@@ -44,6 +45,17 @@ require_relative "mjml_red/components/body/mj_divider"
 require_relative "mjml_red/components/body/mj_spacer"
 require_relative "mjml_red/components/body/mj_table"
 require_relative "mjml_red/components/body/mj_raw"
+require_relative "mjml_red/components/body/mj_hero"
+require_relative "mjml_red/components/body/mj_social"
+require_relative "mjml_red/components/body/mj_social_element"
+require_relative "mjml_red/components/body/mj_navbar"
+require_relative "mjml_red/components/body/mj_navbar_link"
+require_relative "mjml_red/components/body/mj_accordion"
+require_relative "mjml_red/components/body/mj_accordion_element"
+require_relative "mjml_red/components/body/mj_accordion_title"
+require_relative "mjml_red/components/body/mj_accordion_text"
+require_relative "mjml_red/components/body/mj_carousel"
+require_relative "mjml_red/components/body/mj_carousel_image"
 
 module MjmlRed
   def self.to_html(mjml_string, options = {})
