@@ -62,3 +62,5 @@ module MjmlRed
     Renderer.call(mjml_string, options)
   end
 end
+
+require "mjml_red/railtie" if defined?(Rails::Railtie)
